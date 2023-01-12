@@ -19,7 +19,7 @@
 <body style="margin: 40px;">
     <h3>음성 인식(녹음)</h3>
     <hr>
-    <form action="/speech/etri" method="post">
+    <form action="/speech/etri" method="get">
         <table class="table table-borderless">
             <tr>
                 <td>언어 선택</td>
@@ -48,6 +48,6 @@
             </tr>
         </table>
     </form>
-    <script src="/js/audio.js?q=1"></script>		<!-- 캐쉬에 저장된 JS 코드 대신에 최신 코드를 반영 -->
+    <script src="/js/audio.js?q=4"></script>		<!-- 캐쉬에 저장된 JS 코드 대신에 최신 코드를 반영 -->
 </body>
 </html>

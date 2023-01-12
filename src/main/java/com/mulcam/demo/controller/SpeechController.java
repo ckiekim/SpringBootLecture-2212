@@ -1,6 +1,7 @@
 package com.mulcam.demo.controller;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,8 +15,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 
@@ -37,6 +40,7 @@ public class SpeechController {
         String accessKey = etriKey;    // 발급받은 API Key
         String languageCode = "korean";     // 언어 코드
         String audioFilePath = "/Temp/hello.wav";  // 녹음된 음성 파일 경로
+//        String audioFilePath = "/Temp/spring/rawAudio.wav";  // 녹음된 음성 파일 경로
  
         Gson gson = new Gson();
         
@@ -76,4 +80,14 @@ public class SpeechController {
         
 		return data;
 	}
+	
+	@ResponseBody
+	@PostMapping("/audioUpload")
+	public String audioUpload(MultipartFile audioBlob) throws Exception {
+		File uploadFile = new File("rawAudio.wav");
+		audioBlob.transferTo(uploadFile);
+		
+		return "0";
+	}
+	
 }

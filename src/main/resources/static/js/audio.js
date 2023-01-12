@@ -27,9 +27,10 @@ if (navigator.mediaDevices) {
 
     const constraints = { audio: true };
     let chunks = [];
+	const options = { audioBitsPerSecond : 16000, };
 
     navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-        const mediaRecorder = new MediaRecorder(stream);
+        const mediaRecorder = new MediaRecorder(stream, options);
 
         record.onclick = e => {
             e.preventDefault();
@@ -55,9 +56,12 @@ if (navigator.mediaDevices) {
                 type: 'audio/wav codecs=opus'       // 44100 Hz 녹음이 됨
             });
 
+			// 16KHz로 resampling
+			// options 로 설정
+
             // 오디오 데이터 ajax
             const formData = new FormData();
-            formData.append("audio_blob", blob);
+            formData.append("audioBlob", blob);
 
             $.ajax({
                 type: "POST",
