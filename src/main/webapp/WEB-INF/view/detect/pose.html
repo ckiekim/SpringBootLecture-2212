@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객체 탐지</title>
+</head>
+<body style="margin: 40px;">
+    <h3>네이버 인공지능 API Pose Estimation 결과</h3>
+    <hr>
+    <canvas id="tcanvas" width="100" height="100"></canvas>
+    <br><br>
+    <button onclick="location.href='/detect/naver'">재실행</button>
+    <table>
+        <tr><td>0</td><td>코</td><td>1</td><td>목</td><td>2</td><td>오른쪽 어깨</td></tr>
+        <tr><td>3</td><td>오른쪽 팔굼치</td><td>4</td><td>오른쪽 손목</td><td>5</td><td>왼쪽 어깨</td></tr>
+        <tr><td>6</td><td>왼쪽 팔굼치</td><td>7</td><td>왼쪽 손목</td><td>8</td><td>오른쪽 엉덩이</td></tr>
+        <tr><td>9</td><td>오른쪽 무릎</td><td>10</td><td>오른쪽 발목</td><td>11</td><td>왼쪽 엉덩이</td></tr>
+        <tr><td>12</td><td>왼쪽 무릎</td><td>13</td><td>왼쪽 발목</td><td>14</td><td>오른쪽 눈</td></tr>
+        <tr><td>15</td><td>왼쪽 눈</td><td>16</td><td>오른쪽 귀</td><td>17</td><td>왼쪽 귀</td></tr>
+    </table>
+    <script>
+        //let jsonStr = '${jsonResult}';
+        let jsonStr = '{    "predictions": [        {            "0": {                "score": 0.7801799774169922,                "x": 0.52,                "y": 0.32142857142857145            },            "1": {                "score": 0.7683699727058411,                "x": 0.4725,                "y": 0.4107142857142857            },            "2": {                "score": 0.704675018787384,                "x": 0.4625,                "y": 0.4107142857142857            },            "3": {                "score": 0.7935349941253662,                "x": 0.4125,                "y": 0.53125            },            "4": {                "score": 0.7306879758834839,                "x": 0.4575,                "y": 0.6517857142857143            },            "5": {                "score": 0.5518519878387451,                "x": 0.4875,                "y": 0.41517857142857145            },            "8": {                "score": 0.4737370014190674,                "x": 0.455,                "y": 0.6875            },            "9": {                "score": 0.7630059719085693,                "x": 0.3825,                "y": 0.8973214285714286            },            "10": {                "score": 0.6104090213775635,                "x": 0.2525,                "y": 0.8705357142857143            },            "11": {                "score": 0.564300000667572,                "x": 0.505,                "y": 0.6741071428571429            },            "12": {                "score": 0.8132709860801697,                "x": 0.615,                "y": 0.6875            },            "13": {                "score": 0.626462996006012,                "x": 0.595,                "y": 0.9241071428571429            },            "14": {                "score": 0.819953978061676,                "x": 0.5125,                "y": 0.29910714285714285            },            "16": {                "score": 0.8748080134391785,                "x": 0.48,                "y": 0.3080357142857143            }        }    ]}';
+        let partNames = ['코','목','오른쪽 어깨','오른쪽 팔굼치','오른쪽 손목','왼쪽 어깨',
+                         '왼쪽 팔굼치','왼쪽 손목','오른쪽 엉덩이','오른쪽 무릎','오른쪽 발목','왼쪽 엉덩이',
+                         '왼쪽 무릎','왼쪽 발목','오른쪽 눈','왼쪽 눈','오른쪽 귀','왼쪽 귀'];
+        let obj = JSON.parse(jsonStr);
+        let body = obj.predictions[0];
+
+        const canvas = document.getElementById('tcanvas');
+        let ctx = canvas.getContext("2d");
+        let img = new Image();
+        img.src = '/Temp/upload/런지.png';
+        //img.src = '/file/download?fileName=${fileName}';
+        img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            ctx.strokeStyle = 'yellow';
+            ctx.linewidth = 2;
+            ctx.fillStyle = 'red';
+            for (let i=0; i<18; i++) {
+                let part = body[i];
+                if (part == null)
+                    continue;
+                let name = partNames[i];
+                
+                let x = part.x * img.width;
+                let y = part.y * img.height;
+                let label = name + ' (' + parseInt(part.score * 100) + '%)';
+                let circle = new Path2D();
+                circle.moveTo(x, y);
+                circle.arc(x, y, 6, 0, 2 * Math.PI);
+                ctx.fill(circle);
+                ctx.stroke();
+                if (i < 10)
+                    ctx.strokeText(i, x-3, y+3);
+                else
+                ctx.strokeText(i, x-6, y+3);
+            }
+        }
+    </script>
+</body>
+</html>
